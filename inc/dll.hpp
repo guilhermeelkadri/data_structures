@@ -1,3 +1,13 @@
+/**
+ * @file dll.hpp
+ * @author Guilherme El Kadri Ribeiro (guilhermeelkadri@gmail.com)
+ * @brief 
+ * @version 0.1
+ * @date 2023-06-15
+ * 
+ * @copyright Copyright (c) 2023
+ * 
+ */
 
 #pragma once
 
@@ -23,6 +33,8 @@ public:
     void createNode(const T& data);
     void insertAtEnd(const T& data);
     void insertAtBeginning(const T& data);
+    void deleteNode(const T& data);
+    std::shared_ptr<Node> getHead() const;
 
     void display() const;
 
