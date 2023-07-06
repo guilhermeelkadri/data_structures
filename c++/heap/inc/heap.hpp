@@ -1,6 +1,6 @@
 /**
  * @file heap.hpp
- * @author your name (you@domain.com)
+ * @author Guilherme El Kadri (guilhermeelkadri@gmail.com)
  * @brief 
  * @version 0.1
  * @date 2023-06-27
@@ -21,13 +21,14 @@ private:
     std::unique_ptr<T[]> data;
     size_t capacity;
     size_t size;
+    bool isMaxHeap;
 
 public:
-    explicit Heap(size_t capacity);
+    Heap(size_t capacity, bool isMaxHeap = true);
 
     bool isEmpty() const;
     void insert(T value);
-    T extractMax();
+    T removeRoot();
 
 private:
     size_t parent(size_t index);
@@ -36,7 +37,14 @@ private:
 
     void heapifyUp(size_t index);
     void heapifyDown(size_t index);
+    bool compare(const T& a, const T& b);
 };
+
+template <typename T>
+bool Heap<T>::compare(const T& a, const T& b) 
+{
+    return isMaxHeap ? (a > b) : (a < b);
+}
 
 template <typename T>
 size_t Heap<T>::parent(size_t index)
@@ -62,7 +70,7 @@ size_t Heap<T>::rightChild(size_t index)
 }
 
 template <typename T>
-Heap<T>::Heap(size_t capacity) : capacity(capacity), size(0)
+Heap<T>::Heap(size_t capacity, bool isMaxHeap) : capacity(capacity), size(0), isMaxHeap(isMaxHeap)
 {
     data = std::make_unique<T[]>(capacity);
 }
@@ -89,7 +97,7 @@ void Heap<T>::insert(T value)
 }
 
 template <typename T>
-T Heap<T>::extractMax()
+T Heap<T>::removeRoot()
 {
     if (isEmpty())
     {
@@ -108,12 +116,12 @@ T Heap<T>::extractMax()
 template <typename T>
 void Heap<T>::heapifyUp(size_t index)
 {
-    if (index == 0)
+    if (index <= 0)
     {
         return;
     }
 
-    if (data[index] > data[parent(index)])
+    if (compare(data[index], data[parent(index)]))
     {
         std::swap(data[index], data[parent(index)]);
 
@@ -126,12 +134,12 @@ void Heap<T>::heapifyDown(size_t index)
 {
     size_t largestElementIndex = index;
 
-    if (leftChild(index) < size && data[leftChild(index)] > data[index])
+    if ((leftChild(index) < size) && compare(data[leftChild(index)], data[index]))
     {
         largestElementIndex = leftChild(index);
     }
 
-    if (rightChild(index) < size && data[rightChild(index)] > data[index])
+    if ((rightChild(index) < size) && compare(data[rightChild(index)], data[index]))
     {
         largestElementIndex = rightChild(index);
     }
